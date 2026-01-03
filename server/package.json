@@ -18,7 +18,8 @@
     "jsonwebtoken": "^9.0.2",
     "oracledb": "^6.3.0",
     "uuid": "^9.0.1",
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "adm-zip": "^0.5.16"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",

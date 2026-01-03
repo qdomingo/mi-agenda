@@ -2,6 +2,12 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
+let AdmZip;
+try {
+  AdmZip = require('adm-zip');
+} catch {
+  AdmZip = null;
+}
 
 function fileExists(p) {
   try {
@@ -35,8 +41,31 @@ function unzipWithSystem(zipPath, targetDir) {
   return false;
 }
 
+function unzipWithJs(zipPath, targetDir) {
+  if (!AdmZip) return false;
+  try {
+    const zip = new AdmZip(zipPath);
+    zip.extractAllTo(targetDir, true);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 (function main() {
-  const walletZipBase64 = process.env.WALLET_ZIP_BASE64;
+  const walletZipBase64 = (() => {
+    if (process.env.WALLET_ZIP_BASE64) return process.env.WALLET_ZIP_BASE64;
+
+    // Allow chunked env vars (useful if the zip exceeds per-var limits)
+    // Example: WALLET_ZIP_BASE64_1, WALLET_ZIP_BASE64_2, ...
+    const parts = [];
+    for (let i = 1; i < 100; i++) {
+      const part = process.env[`WALLET_ZIP_BASE64_${i}`];
+      if (!part) break;
+      parts.push(part);
+    }
+    return parts.length ? parts.join('') : undefined;
+  })();
   const walletLocation = process.env.WALLET_LOCATION || path.join(os.tmpdir(), 'mi-agenda-wallet');
 
   // If wallet already present, do nothing.
@@ -54,7 +83,7 @@ function unzipWithSystem(zipPath, targetDir) {
   const zipPath = path.join(os.tmpdir(), `mi-agenda-wallet-${Date.now()}.zip`);
   fs.writeFileSync(zipPath, Buffer.from(walletZipBase64, 'base64'));
 
-  const ok = unzipWithSystem(zipPath, walletLocation);
+  const ok = unzipWithSystem(zipPath, walletLocation) || unzipWithJs(zipPath, walletLocation);
   try {
     fs.unlinkSync(zipPath);
   } catch {
