@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Production
+/client/build
+/server/dist
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Prisma
+server/prisma/migrations/
+
+# Oracle Wallet (no commitear credenciales)
+server/wallet/*.sso
+server/wallet/*.p12
+server/wallet/*.jks
+server/wallet/sqlnet.ora
+server/wallet/tnsnames.ora
+server/wallet/ojdbc.properties
+
+# Testing
+coverage/

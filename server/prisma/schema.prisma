@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "oracle"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  nombre    String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  eventos   Evento[]
+  contactos Contacto[]
+  tareas    Tarea[]
+}
+
+model Evento {
+  id          String   @id @default(uuid())
+  titulo      String
+  descripcion String?
+  fechaInicio DateTime
+  fechaFin    DateTime
+  ubicacion   String?
+  usuarioId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@index([fechaInicio])
+}
+
+model Contacto {
+  id        String   @id @default(uuid())
+  nombre    String
+  apellido  String?
+  email     String?
+  telefono  String?
+  notas     String?
+  usuarioId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+}
+
+model Tarea {
+  id          String    @id @default(uuid())
+  titulo      String
+  descripcion String?
+  completada  Boolean   @default(false)
+  fechaLimite DateTime?
+  prioridad   Prioridad @default(MEDIA)
+  usuarioId   String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@index([completada])
+}
+
+enum Prioridad {
+  BAJA
+  MEDIA
+  ALTA
+}
