@@ -16,7 +16,7 @@
     "install-server:heroku": "cd server && npm install --include=dev",
     "install-client:heroku": "cd client && npm install --include=dev",
     "install-all": "npm run install-server && npm run install-client",
-    "build": "npm run build:server && npm run build:client",
+    "build:all": "npm run build:server && npm run build:client",
     "start": "cd server && npm start",
     "heroku-postbuild": "npm run install-server:heroku && npm run install-client:heroku && npm run build:server && npm run build:client"
   },
