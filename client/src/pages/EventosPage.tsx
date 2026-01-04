@@ -170,17 +170,17 @@ const EventosPage: React.FC<EventosPageProps> = ({ usuarioId }) => {
   }
 
   return (
-    <div className="px-4">
+    <div className="px-2 sm:px-4">
       {apiError && (
         <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
           <p className="text-sm text-red-600">{apiError}</p>
         </div>
       )}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Mis Eventos</h2>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-3">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Mis Eventos</h2>
         <button
           onClick={() => (showForm ? cancelForm() : startCreate())}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+          className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition text-sm sm:text-base"
         >
           {showForm ? 'Cancelar' : '+ Nuevo Evento'}
         </button>

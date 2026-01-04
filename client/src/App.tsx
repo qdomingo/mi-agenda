@@ -13,49 +13,116 @@ const ProtectedRoute: React.FC<{ children: React.ReactElement, isAuthenticated: 
 
 // Componente de navegación
 const NavBar: React.FC<{ userName: string, onLogout: () => void }> = ({ userName, onLogout }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <nav className="bg-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-gray-800">📅 Mi Agenda</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">📅 Mi Agenda</h1>
           </div>
-          <div className="flex items-center space-x-4">
+          
+          {/* Desktop menu */}
+          <div className="hidden md:flex items-center space-x-2 lg:space-x-4">
             <Link
               to="/"
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition"
+              className="px-2 lg:px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition"
             >
               🏠 Inicio
             </Link>
             <Link
               to="/eventos"
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition"
+              className="px-2 lg:px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition"
             >
               📅 Eventos
             </Link>
             <Link
               to="/contactos"
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition"
+              className="px-2 lg:px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition"
             >
               👥 Contactos
             </Link>
             <Link
               to="/tareas"
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition"
+              className="px-2 lg:px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition"
             >
               ✅ Tareas
             </Link>
-            <div className="border-l border-gray-300 pl-4 ml-4 flex items-center space-x-3">
-              <span className="text-sm text-gray-600">👤 {userName}</span>
+            <div className="border-l border-gray-300 pl-2 lg:pl-4 ml-2 lg:ml-4 flex items-center space-x-2 lg:space-x-3">
+              <span className="text-sm text-gray-600 hidden lg:inline">👤 {userName}</span>
+              <span className="text-sm text-gray-600 lg:hidden">👤</span>
               <button
                 onClick={onLogout}
-                className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded-md transition"
+                className="px-2 lg:px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded-md transition"
               >
                 Salir
               </button>
             </div>
           </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none"
+            >
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                {mobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
+
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden pb-3 pt-2 space-y-1">
+            <Link
+              to="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
+            >
+              🏠 Inicio
+            </Link>
+            <Link
+              to="/eventos"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
+            >
+              📅 Eventos
+            </Link>
+            <Link
+              to="/contactos"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
+            >
+              👥 Contactos
+            </Link>
+            <Link
+              to="/tareas"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-blue-600 rounded-md"
+            >
+              ✅ Tareas
+            </Link>
+            <div className="border-t border-gray-200 pt-3 mt-3">
+              <div className="px-3 py-2 text-sm text-gray-600">👤 {userName}</div>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onLogout();
+                }}
+                className="block w-full text-left px-3 py-2 text-base font-medium text-red-600 hover:bg-red-50 rounded-md"
+              >
+                Salir
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

@@ -164,27 +164,27 @@ const HomePage: React.FC<HomePageProps> = ({ usuarioId }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-2 sm:p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
+        <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">Mi Agenda</h1>
-              <p className="text-gray-600 mt-1">Vista general de eventos y tareas</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Mi Agenda</h1>
+              <p className="text-sm sm:text-base text-gray-600 mt-1">Vista general de eventos y tareas</p>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-3 sm:gap-4">
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-blue-500 rounded"></div>
-                <span className="text-sm text-gray-700">Eventos</span>
+                <div className="w-3 h-3 sm:w-4 sm:h-4 bg-blue-500 rounded"></div>
+                <span className="text-xs sm:text-sm text-gray-700">Eventos</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-green-500 rounded"></div>
-                <span className="text-sm text-gray-700">Tareas</span>
+                <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded"></div>
+                <span className="text-xs sm:text-sm text-gray-700">Tareas</span>
               </div>
             </div>
           </div>
 
-          <div style={{ height: '700px' }}>
+          <div className="h-[500px] sm:h-[600px] md:h-[700px]">
             <Calendar
               localizer={localizer}
               events={calendarEvents}
@@ -216,20 +216,20 @@ const HomePage: React.FC<HomePageProps> = ({ usuarioId }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white rounded-lg shadow p-4">
-            <h3 className="font-semibold text-gray-800 mb-2">Próximos Eventos</h3>
-            <p className="text-3xl font-bold text-blue-600">{eventos.length}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+            <h3 className="text-sm sm:text-base font-semibold text-gray-800 mb-2">Próximos Eventos</h3>
+            <p className="text-2xl sm:text-3xl font-bold text-blue-600">{eventos.length}</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-4">
-            <h3 className="font-semibold text-gray-800 mb-2">Tareas Pendientes</h3>
-            <p className="text-3xl font-bold text-green-600">
+          <div className="bg-white rounded-lg shadow p-3 sm:p-4">
+            <h3 className="text-sm sm:text-base font-semibold text-gray-800 mb-2">Tareas Pendientes</h3>
+            <p className="text-2xl sm:text-3xl font-bold text-green-600">
               {tareas.filter((t) => !t.completada).length}
             </p>
           </div>
-          <div className="bg-white rounded-lg shadow p-4">
-            <h3 className="font-semibold text-gray-800 mb-2">Contactos</h3>
-            <p className="text-3xl font-bold text-purple-600">-</p>
+          <div className="bg-white rounded-lg shadow p-3 sm:p-4 sm:col-span-2 lg:col-span-1">
+            <h3 className="text-sm sm:text-base font-semibold text-gray-800 mb-2">Contactos</h3>
+            <p className="text-2xl sm:text-3xl font-bold text-purple-600">-</p>
           </div>
         </div>
       </div>
