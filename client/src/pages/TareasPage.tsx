@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 // Helper para formatear fechas para datetime-local input
 const roundToFiveMinutes = (value: Date): Date => {
@@ -46,10 +46,6 @@ const TareasPage: React.FC<TareasPageProps> = ({ usuarioId }) => {
   });
 
   useEffect(() => {
-    fetchTareas();
-  }, [usuarioId]);
-
-  useEffect(() => {
     if (!showForm) return;
     if (editingId) return;
     setFormData((prev) => {
@@ -70,7 +66,7 @@ const TareasPage: React.FC<TareasPageProps> = ({ usuarioId }) => {
     return headers;
   };
 
-  const fetchTareas = async () => {
+  const fetchTareas = useCallback(async () => {
     try {
       setApiError('');
       const response = await fetch('/api/tareas', {
@@ -100,7 +96,11 @@ const TareasPage: React.FC<TareasPageProps> = ({ usuarioId }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchTareas();
+  }, [fetchTareas]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

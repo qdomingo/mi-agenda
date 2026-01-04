@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import AuthPage from './pages/AuthPage';
+import HomePage from './pages/HomePage';
 import EventosPage from './pages/EventosPage';
 import ContactosPage from './pages/ContactosPage';
 import TareasPage from './pages/TareasPage';
@@ -20,6 +21,12 @@ const NavBar: React.FC<{ userName: string, onLogout: () => void }> = ({ userName
             <h1 className="text-2xl font-bold text-gray-800">📅 Mi Agenda</h1>
           </div>
           <div className="flex items-center space-x-4">
+            <Link
+              to="/"
+              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition"
+            >
+              🏠 Inicio
+            </Link>
             <Link
               to="/eventos"
               className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition"
@@ -110,13 +117,15 @@ function App() {
             <Route 
               path="/login" 
               element={
-                isAuthenticated ? <Navigate to="/eventos" /> : <AuthPage onLogin={handleLogin} />
+                isAuthenticated ? <Navigate to="/" /> : <AuthPage onLogin={handleLogin} />
               } 
             />
             <Route 
               path="/" 
               element={
-                isAuthenticated ? <Navigate to="/eventos" /> : <Navigate to="/login" />
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <HomePage usuarioId={userId!} />
+                </ProtectedRoute>
               } 
             />
             <Route 

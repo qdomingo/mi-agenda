@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 interface Contacto {
   id: string;
@@ -28,10 +28,6 @@ const ContactosPage: React.FC<ContactosPageProps> = ({ usuarioId }) => {
     notas: '',
   });
 
-  useEffect(() => {
-    fetchContactos();
-  }, [usuarioId]);
-
   const getAuthHeaders = (contentType?: string) => {
     const token = localStorage.getItem('token');
     const headers: Record<string, string> = {};
@@ -40,7 +36,7 @@ const ContactosPage: React.FC<ContactosPageProps> = ({ usuarioId }) => {
     return headers;
   };
 
-  const fetchContactos = async () => {
+  const fetchContactos = useCallback(async () => {
     try {
       setApiError('');
       const response = await fetch('/api/contactos', {
@@ -70,7 +66,11 @@ const ContactosPage: React.FC<ContactosPageProps> = ({ usuarioId }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchContactos();
+  }, [fetchContactos]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
