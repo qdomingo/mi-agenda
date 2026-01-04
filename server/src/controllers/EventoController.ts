@@ -82,11 +82,14 @@ export class EventoController {
         return;
       }
 
+      // Forzamos a que siempre sea Date (no undefined) para cumplir el tipo
+      const fechaInicioParsed = parseDateLocal(fecha_inicio) || new Date();
+      const fechaFinParsed = parseDateLocal(fecha_fin) || new Date();
       const evento = await EventoRepository.create({
         titulo,
         descripcion,
-        fecha_inicio: parseDateLocal(fecha_inicio),
-        fecha_fin: parseDateLocal(fecha_fin),
+        fecha_inicio: fechaInicioParsed,
+        fecha_fin: fechaFinParsed,
         ubicacion,
         usuario_id: usuarioId,
       });
@@ -108,10 +111,10 @@ export class EventoController {
 
       // Convertir fechas si vienen como strings
       if (updates.fecha_inicio) {
-        updates.fecha_inicio = parseDateLocal(updates.fecha_inicio);
+        updates.fecha_inicio = parseDateLocal(updates.fecha_inicio) || new Date();
       }
       if (updates.fecha_fin) {
-        updates.fecha_fin = parseDateLocal(updates.fecha_fin);
+        updates.fecha_fin = parseDateLocal(updates.fecha_fin) || new Date();
       }
 
       const evento = await EventoRepository.update(id, updates);

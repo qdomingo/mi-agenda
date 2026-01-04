@@ -80,11 +80,13 @@ export class TareaController {
         return;
       }
 
+      // Forzamos a que siempre sea Date (no undefined) para cumplir el tipo
+      const fechaLimiteParsed = parseDateLocal(fecha_limite) || new Date();
       const tarea = await TareaRepository.create({
         titulo,
         descripcion,
         completada: completada || false,
-        fecha_limite: parseDateLocal(fecha_limite),
+        fecha_limite: fechaLimiteParsed,
         prioridad: prioridad || 'MEDIA',
         usuario_id: usuarioId,
       });
@@ -106,7 +108,7 @@ export class TareaController {
 
       // Convertir fecha si viene como string
       if (updates.fecha_limite) {
-        updates.fecha_limite = parseDateLocal(updates.fecha_limite);
+        updates.fecha_limite = parseDateLocal(updates.fecha_limite) || new Date();
       }
 
       const tarea = await TareaRepository.update(id, updates);
