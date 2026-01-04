@@ -1,3 +1,14 @@
+// Parsea string 'YYYY-MM-DDTHH:mm' como local (sin UTC)
+function parseDateLocal(dateString?: string): Date | undefined {
+  if (!dateString) return undefined;
+  // Solo procesa si es string tipo 'YYYY-MM-DDTHH:mm' o 'YYYY-MM-DDTHH:mm:ss'
+  const match = dateString.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/);
+  if (!match) return new Date(dateString); // fallback
+  const [datePart, timePart] = dateString.split('T');
+  const [year, month, day] = datePart.split('-').map(Number);
+  const [hour, minute] = timePart.split(':').map(Number);
+  return new Date(year, month - 1, day, hour, minute);
+}
 import { Request, Response } from 'express';
 import { TareaRepository } from '../repositories/TareaRepository';
 import { AuthRequest } from '../middleware/auth';
@@ -73,7 +84,7 @@ export class TareaController {
         titulo,
         descripcion,
         completada: completada || false,
-        fecha_limite: fecha_limite ? new Date(fecha_limite) : undefined,
+        fecha_limite: parseDateLocal(fecha_limite),
         prioridad: prioridad || 'MEDIA',
         usuario_id: usuarioId,
       });
@@ -95,7 +106,7 @@ export class TareaController {
 
       // Convertir fecha si viene como string
       if (updates.fecha_limite) {
-        updates.fecha_limite = new Date(updates.fecha_limite);
+        updates.fecha_limite = parseDateLocal(updates.fecha_limite);
       }
 
       const tarea = await TareaRepository.update(id, updates);

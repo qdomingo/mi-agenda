@@ -1,3 +1,14 @@
+// Parsea string 'YYYY-MM-DDTHH:mm' como local (sin UTC)
+function parseDateLocal(dateString?: string): Date | undefined {
+  if (!dateString) return undefined;
+  // Solo procesa si es string tipo 'YYYY-MM-DDTHH:mm' o 'YYYY-MM-DDTHH:mm:ss'
+  const match = dateString.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/);
+  if (!match) return new Date(dateString); // fallback
+  const [datePart, timePart] = dateString.split('T');
+  const [year, month, day] = datePart.split('-').map(Number);
+  const [hour, minute] = timePart.split(':').map(Number);
+  return new Date(year, month - 1, day, hour, minute);
+}
 import { Request, Response } from 'express';
 import { EventoRepository } from '../repositories/EventoRepository';
 import { AuthRequest } from '../middleware/auth';
@@ -74,8 +85,8 @@ export class EventoController {
       const evento = await EventoRepository.create({
         titulo,
         descripcion,
-        fecha_inicio: new Date(fecha_inicio),
-        fecha_fin: new Date(fecha_fin),
+        fecha_inicio: parseDateLocal(fecha_inicio),
+        fecha_fin: parseDateLocal(fecha_fin),
         ubicacion,
         usuario_id: usuarioId,
       });
@@ -97,10 +108,10 @@ export class EventoController {
 
       // Convertir fechas si vienen como strings
       if (updates.fecha_inicio) {
-        updates.fecha_inicio = new Date(updates.fecha_inicio);
+        updates.fecha_inicio = parseDateLocal(updates.fecha_inicio);
       }
       if (updates.fecha_fin) {
-        updates.fecha_fin = new Date(updates.fecha_fin);
+        updates.fecha_fin = parseDateLocal(updates.fecha_fin);
       }
 
       const evento = await EventoRepository.update(id, updates);
