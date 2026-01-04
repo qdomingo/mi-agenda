@@ -3,6 +3,32 @@ import { executeQuery, executeCommand } from '../database/connection';
 import { Evento } from '../models/types';
 
 export class EventoRepository {
+  // Convierte Date a string ISO local (sin 'Z') para evitar desfase de zona horaria
+  private static dateToLocalString(date: Date | undefined): string | undefined {
+    if (!date || !(date instanceof Date)) return undefined;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }
+
+  private static toEvento(row: any): Evento {
+    return {
+      id: row.id,
+      titulo: row.titulo,
+      descripcion: row.descripcion ?? undefined,
+      fecha_inicio: this.dateToLocalString(row.fecha_inicio) as any,
+      fecha_fin: this.dateToLocalString(row.fecha_fin) as any,
+      ubicacion: row.ubicacion ?? undefined,
+      usuario_id: row.usuario_id,
+      created_at: row.created_at ?? undefined,
+      updated_at: row.updated_at ?? undefined,
+    };
+  }
+
   /**
    * Obtener todos los eventos de un usuario
    */
@@ -22,7 +48,8 @@ export class EventoRepository {
       WHERE usuario_id = :1
       ORDER BY fecha_inicio DESC
     `;
-    return executeQuery<Evento>(sql, [usuarioId]);
+    const rows = await executeQuery<any>(sql, [usuarioId]);
+    return rows.map(this.toEvento.bind(this));
   }
 
   /**
@@ -43,8 +70,8 @@ export class EventoRepository {
       FROM mi_agenda_eventos
       WHERE id = :1
     `;
-    const result = await executeQuery<Evento>(sql, [id]);
-    return result.length > 0 ? result[0] : null;
+    const result = await executeQuery<any>(sql, [id]);
+    return result.length > 0 ? this.toEvento(result[0]) : null;
   }
 
   /**

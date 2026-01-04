@@ -3,6 +3,18 @@ import { executeQuery, executeCommand } from '../database/connection';
 import { Tarea } from '../models/types';
 
 export class TareaRepository {
+  // Convierte Date a string ISO local (sin 'Z') para evitar desfase de zona horaria
+  private static dateToLocalString(date: Date | undefined): string | undefined {
+    if (!date || !(date instanceof Date)) return undefined;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  }
+
   private static toTarea(row: any): Tarea {
     const completada = row.completada === 1 || row.completada === true;
     return {
@@ -10,7 +22,7 @@ export class TareaRepository {
       titulo: row.titulo,
       descripcion: row.descripcion ?? undefined,
       completada,
-      fecha_limite: row.fecha_limite ?? undefined,
+      fecha_limite: this.dateToLocalString(row.fecha_limite) as any,
       prioridad: row.prioridad,
       usuario_id: row.usuario_id,
       created_at: row.created_at ?? undefined,
@@ -44,7 +56,7 @@ export class TareaRepository {
         fecha_limite ASC NULLS LAST
     `;
     const rows = await executeQuery<any>(sql, [usuarioId]);
-    return rows.map(this.toTarea);
+    return rows.map(this.toTarea.bind(this));
   }
 
   /**
