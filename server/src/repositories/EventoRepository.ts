@@ -50,7 +50,7 @@ export class EventoRepository {
   /**
    * Crear un nuevo evento
    */
-  static async create(evento: Omit<Evento, 'id' | 'created_at' | 'updated_at'>): Promise<Evento> {
+  static async create(evento: Omit<Evento, 'id' | 'created_at' | 'updated_at'> & { fecha_inicio?: Date; fecha_fin?: Date }): Promise<Evento> {
     const id = uuidv4();
     const sql = `
       INSERT INTO mi_agenda_eventos (id, titulo, descripcion, fecha_inicio, fecha_fin, ubicacion, usuario_id)
@@ -60,8 +60,8 @@ export class EventoRepository {
       id,
       evento.titulo,
       evento.descripcion || null,
-      evento.fecha_inicio,
-      evento.fecha_fin,
+      evento.fecha_inicio || null,
+      evento.fecha_fin || null,
       evento.ubicacion || null,
       evento.usuario_id,
     ]);

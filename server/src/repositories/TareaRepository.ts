@@ -73,7 +73,7 @@ export class TareaRepository {
   /**
    * Crear una nueva tarea
    */
-  static async create(tarea: Omit<Tarea, 'id' | 'created_at' | 'updated_at'>): Promise<Tarea> {
+  static async create(tarea: Omit<Tarea, 'id' | 'created_at' | 'updated_at'> & { fecha_limite?: Date }): Promise<Tarea> {
     const id = uuidv4();
     const sql = `
       INSERT INTO mi_agenda_tareas (id, titulo, descripcion, completada, fecha_limite, prioridad, usuario_id)
