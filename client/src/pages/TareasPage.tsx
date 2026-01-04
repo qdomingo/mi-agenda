@@ -12,12 +12,10 @@ const roundToFiveMinutes = (value: Date): Date => {
 
 const formatDateTimeLocal = (date: Date | string): string => {
   const d = new Date(date);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  const hours = String(d.getHours()).padStart(2, '0');
-  const minutes = String(d.getMinutes()).padStart(2, '0');
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
+  // Ajuste para compensar la zona horaria local (igual que en EventosPage)
+  const offset = d.getTimezoneOffset();
+  const localDate = new Date(d.getTime() - offset * 60000);
+  return localDate.toISOString().slice(0, 16);
 };
 
 interface Tarea {
